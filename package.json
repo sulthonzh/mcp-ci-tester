@@ -9,8 +9,7 @@
   "scripts": {
     "build": "tsc",
     "dev": "ts-node src/cli.ts",
-    "test": "jest",
-    "test:watch": "jest --watch",
+    "test": "node --test test/test.mjs",
     "prepare": "npm run build"
   },
   "keywords": [
