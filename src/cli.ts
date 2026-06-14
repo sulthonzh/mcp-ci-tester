@@ -41,7 +41,6 @@ program
       const tester = new MCPTester(testOptions);
       const result = await tester.runTests();
 
-      // Output based on format options
       let output = '';
       
       if (options.json) {
@@ -54,7 +53,6 @@ program
         output = generateTextOutput(result);
       }
 
-      // Write to file if specified
       if (options.output) {
         const outputDir = join(process.cwd(), options.output);
         if (!existsSync(outputDir)) {
@@ -66,7 +64,6 @@ program
         console.log(output);
       }
 
-      // Exit with appropriate code
       process.exit(result.passed ? 0 : 1);
     } catch (error) {
       console.error('Error running tests:', error instanceof Error ? error.message : String(error));

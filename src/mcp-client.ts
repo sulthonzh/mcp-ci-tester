@@ -1,6 +1,5 @@
 import { spawn, ChildProcess } from 'child_process';
 import { EventEmitter } from 'events';
-import { Readable, Writable } from 'stream';
 
 export interface MCPTool {
   name: string;
@@ -94,10 +93,6 @@ export class MCPClient extends EventEmitter {
   private nextId = 1;
   private inputBuffer: string = '';
   private tools: MCPTool[] = [];
-
-  constructor() {
-    super();
-  }
 
   async start(command: string, args: string[] = []): Promise<void> {
     this.process = spawn(command, args);
@@ -232,7 +227,6 @@ export class MCPClient extends EventEmitter {
 
   async testToolSchema(tool: MCPTool): Promise<MCPTestResult> {
     try {
-      // Test with no arguments
       const response = await this.callTool(tool.name, {});
       
       if (response.result) {

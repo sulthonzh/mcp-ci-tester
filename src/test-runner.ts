@@ -1,6 +1,5 @@
 import { MCPClient } from './mcp-client';
 import { SchemaValidator } from './schema-validator';
-import { MCPTool } from './mcp-client';
 
 export interface TestOptions {
   command: string;
@@ -54,10 +53,8 @@ export class MCPTester {
     const errors: string[] = [];
 
     try {
-      // Start the MCP server
       await this.startServer();
       
-      // Run test suites
       if (this.options.schemaValidation) {
         const schemaTests = await this.runSchemaValidationTests();
         tests.push(...schemaTests);
@@ -125,7 +122,6 @@ export class MCPTester {
       details: { toolsFound: tools.length }
     });
 
-    // Validate each tool's schema
     for (const tool of tools) {
       const validationResult = this.validator.validateToolSchema(tool);
       
@@ -149,7 +145,6 @@ export class MCPTester {
     const tools = this.client.getAvailableTools();
 
     for (const tool of tools) {
-      // Test with valid arguments (if schema has required properties, use empty object)
       try {
         const testResult = await this.client.testToolSchema(tool);
         tests.push({
@@ -159,7 +154,6 @@ export class MCPTester {
           details: testResult.details
         });
 
-        // Test error handling with invalid arguments
         if (testResult.passed) {
           const errorTestResult = await this.client.testToolWithInvalidArguments(tool);
           tests.push({
@@ -189,7 +183,6 @@ export class MCPTester {
       return tests;
     }
 
-    // Test response time for the first available tool
     const tool = tools[0]!;
     const iterations = 5;
     const responseTimes: number[] = [];
