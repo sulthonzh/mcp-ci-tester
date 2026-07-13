@@ -31,3 +31,11 @@ Thumbs.db
 
 # package
 *.tgz
+build/
+
+
+# compiled test artifacts
+test-basic.js
+test-basic.js.map
+test-basic.d.ts
+test-basic.d.ts.map
