@@ -19,6 +19,20 @@ export class SchemaValidator {
     addFormats(this.ajv);
   }
 
+  private validateAgainst(schema: object, data: any): ValidationResult {
+    const validate = this.ajv.compile(schema);
+    const valid = validate(data);
+    if (valid) {
+      return { valid: true, errors: [], warnings: [] };
+    }
+    const errors = (validate.errors || []).map((error: any) => {
+      const instancePath = error.instancePath || 'root';
+      const message = error.message || 'Unknown error';
+      return `${instancePath}: ${message}`;
+    });
+    return { valid: false, errors, warnings: [] };
+  }
+
   validateToolSchema(tool: any): ValidationResult {
     const schema = {
       type: 'object',
@@ -102,28 +116,7 @@ export class SchemaValidator {
       }
     };
 
-    const validate = this.ajv.compile(schema);
-    const valid = validate(tool);
-
-    if (!valid) {
-      const errors = validate.errors?.map(error => {
-        const instancePath = error.instancePath || 'root';
-        const message = error.message || 'Unknown error';
-        return `${instancePath}: ${message}`;
-      }) || [];
-
-      return {
-        valid: false,
-        errors,
-        warnings: []
-      };
-    }
-
-    return {
-      valid: true,
-      errors: [],
-      warnings: []
-    };
+    return this.validateAgainst(schema, tool);
   }
 
   validateInitializeResponse(response: any): ValidationResult {
@@ -172,28 +165,7 @@ export class SchemaValidator {
       }
     };
 
-    const validate = this.ajv.compile(schema);
-    const valid = validate(response);
-
-    if (!valid) {
-      const errors = validate.errors?.map(error => {
-        const instancePath = error.instancePath || 'root';
-        const message = error.message || 'Unknown error';
-        return `${instancePath}: ${message}`;
-      }) || [];
-
-      return {
-        valid: false,
-        errors,
-        warnings: []
-      };
-    }
-
-    return {
-      valid: true,
-      errors: [],
-      warnings: []
-    };
+    return this.validateAgainst(schema, response);
   }
 
   validateCallToolResponse(response: any): ValidationResult {
@@ -241,27 +213,6 @@ export class SchemaValidator {
       }
     };
 
-    const validate = this.ajv.compile(schema);
-    const valid = validate(response);
-
-    if (!valid) {
-      const errors = validate.errors?.map(error => {
-        const instancePath = error.instancePath || 'root';
-        const message = error.message || 'Unknown error';
-        return `${instancePath}: ${message}`;
-      }) || [];
-
-      return {
-        valid: false,
-        errors,
-        warnings: []
-      };
-    }
-
-    return {
-      valid: true,
-      errors: [],
-      warnings: []
-    };
+    return this.validateAgainst(schema, response);
   }
 }
